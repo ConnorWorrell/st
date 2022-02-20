@@ -5,8 +5,8 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-//static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
-static char *font = "Inconsolata Medium:pixelsize=16:antialias=true:autohint=true";
+//static char *font = "Liberation Mono:pixelsize=16:antialias=true:autohint=true";
+static char *font = "Inconsolata:pixelsize=22:antialias=true:autohint=true:spacing=20";
 static int borderpx = 2;
 
 /*
@@ -27,7 +27,7 @@ char *stty_args = "stty raw pass8 nl -echo -iexten -cstopb 38400";
 char *vtiden = "\033[?6c";
 
 /* Kerning / character bounding-box multipliers */
-static float cwscale = 1.0;
+static float cwscale = 0.4;
 static float chscale = 1.0;
 
 /*
@@ -99,46 +99,48 @@ float alpha = 0.95, alphaUnfocused = 0.75;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
-	/* 8 normal colors */
-	"black",
-	"red3",
-	"green3",
-	"yellow3",
-	"blue2",
-	"magenta3",
-	"cyan3",
-	"gray90",
+  /* 8 normal colors */
+  [0] = "#181818", /* black   */
+  [1] = "#ab4642", /* red     */
+  [2] = "#a1b56c", /* green   */
+  [3] = "#f7ca88", /* yellow  */
+  [4] = "#7cafc2", /* blue    */
+  [5] = "#ba8baf", /* magenta */
+  [6] = "#86c1b9", /* cyan    */
+  [7] = "#d8d8d8", /* white   */
 
-	/* 8 bright colors */
-	"gray50",
-	"red",
-	"green",
-	"yellow",
-	"#5c5cff",
-	"magenta",
-	"cyan",
-	"white",
+  /* 8 bright colors */
+  [8]  = "#585858", /* black   */
+  [9]  = "#ab4624", /* red     */
+  [10] = "#a1b56c", /* green   */
+  [11] = "#f7ca88", /* yellow  */
+  [12] = "#7cafc2", /* blue    */
+  [13] = "#ba8baf", /* magenta */
+  [14] = "#86c1b9", /* cyan    */
+  [15] = "#f8f8f8", /* white   */
 
-	[255] = 0,
-
-	/* more colors can be added after 255 to use with DefaultXX */
-	"#cccccc",
-	"#555555",
-	"gray90", /* default foreground colour */
-	"black", /* default background colour */
+  /* special colors */
+  [256] = "#181818", /* background */
+  [257] = "#d8d8d8", /* foreground */
 };
-
 
 /*
  * Default colors (colorname index)
- * foreground, background, cursor, reverse cursor
+ * foreground, background, cursor
  */
-unsigned int defaultfg = 258;
-unsigned int defaultbg = 0;
-unsigned int defaultcs = 256;
+unsigned int defaultfg = 257;
+unsigned int defaultbg = 256;
+unsigned int defaultcs = 257;
 static unsigned int defaultrcs = 257;
-unsigned int bg = 0, bgUnfocused = 0;
+unsigned int bg = 256, bgUnfocused = 256;
 
+/*
+ * Colors used, when the specific fg == defaultfg. So in reverse mode this
+ * will reverse too. Another logic would only make the simple feature too
+ * complex.
+ */
+unsigned int defaultitalic = 7;
+unsigned int defaultunderline = 7;
 /*
  * Default shape of cursor
  * 2: Block ("█")
